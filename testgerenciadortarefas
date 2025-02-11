@@ -1,0 +1,39 @@
+class GerenciadorTarefas {
+    constructor() {
+        this.tarefas = [];
+        this.idCounter = 1;
+    }
+
+    adicionarTarefa(descricao) {
+        if (!descricao) {
+            throw new Error("Descrição é obrigatória");
+        }
+        const tarefa = { id: this.idCounter++, descricao, concluida: false };
+        this.tarefas.push(tarefa);
+        return tarefa;
+    }
+
+    removerTarefa(id) {
+        const tarefaIndex = this.tarefas.findIndex(tarefa => tarefa.id === id);
+        if (tarefaIndex === -1) {
+            throw new Error("Tarefa não encontrada");
+        }
+        const [removida] = this.tarefas.splice(tarefaIndex, 1);
+        return removida;
+    }
+
+    alternarTarefa(id) {
+        const tarefa = this.tarefas.find(tarefa => tarefa.id === id);
+        if (!tarefa) {
+            throw new Error("Tarefa não encontrada");
+        }
+        tarefa.concluida = !tarefa.concluida;
+        return tarefa;
+    }
+
+    obterTarefas() {
+        return this.tarefas;
+    }
+}
+
+module.exports = GerenciadorTarefas;
