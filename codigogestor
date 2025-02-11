@@ -1,0 +1,69 @@
+class GerenciadorTarefas {
+    constructor() {
+        this.tarefas = [];
+    }
+
+    adicionarTarefa(descricao) {
+        if (!descricao) throw new Error("Descrição é obrigatória");
+        const tarefa = { id: this.tarefas.length + 1, descricao, concluida: false };
+        this.tarefas.push(tarefa);
+        return tarefa;
+    }
+
+    removerTarefa(id) {
+        const indice = this.tarefas.findIndex(tarefa => tarefa.id === id);
+        if (indice === -1) throw new Error("Tarefa não encontrada");
+        return this.tarefas.splice(indice, 1)[0];
+    }
+
+    alternarTarefa(id) {
+        const tarefa = this.tarefas.find(tarefa => tarefa.id === id);
+        if (!tarefa) throw new Error("Tarefa não encontrada");
+        tarefa.concluida = !tarefa.concluida;
+        return tarefa;
+    }
+
+    obterTarefas() {
+        return this.tarefas;
+    }
+}
+
+module.exports = GerenciadorTarefas;
+
+// Testes com Jest
+const GerenciadorTarefas = require("./GerenciadorTarefas");
+
+describe("Gerenciador de Tarefas", () => {
+    let gerenciador;
+
+    beforeEach(() => {
+        gerenciador = new GerenciadorTarefas();
+    });
+
+    test("Deve adicionar uma nova tarefa", () => {
+        const tarefa = gerenciador.adicionarTarefa("Estudar Jest");
+        expect(tarefa).toEqual({ id: 1, descricao: "Estudar Jest", concluida: false });
+        expect(gerenciador.obterTarefas()).toHaveLength(1);
+    });
+
+    test("Deve lançar erro ao adicionar tarefa sem descrição", () => {
+        expect(() => gerenciador.adicionarTarefa("")).toThrow("Descrição é obrigatória");
+    });
+
+    test("Deve remover uma tarefa existente", () => {
+        gerenciador.adicionarTarefa("Fazer compras");
+        const removida = gerenciador.removerTarefa(1);
+        expect(removida.descricao).toBe("Fazer compras");
+        expect(gerenciador.obterTarefas()).toHaveLength(0);
+    });
+
+    test("Deve lançar erro ao remover tarefa inexistente", () => {
+        expect(() => gerenciador.removerTarefa(99)).toThrow("Tarefa não encontrada");
+    });
+
+    test("Deve alternar o status de uma tarefa", () => {
+        gerenciador.adicionarTarefa("Aprender Node.js");
+        const tarefa = gerenciador.alternarTarefa(1);
+        expect(tarefa.concluida).toBe(true);
+    });
+});
