@@ -1,0 +1,19 @@
+const GerenciadorTarefas = require("./GerenciadorTarefas");
+
+describe("Adicionar Tarefa", () => {
+    let gerenciador;
+
+    beforeEach(() => {
+        gerenciador = new GerenciadorTarefas();
+    });
+
+    test("Deve adicionar uma nova tarefa", () => {
+        const tarefa = gerenciador.adicionarTarefa("Estudar Jest");
+        expect(tarefa).toEqual({ id: 1, descricao: "Estudar Jest", concluida: false });
+        expect(gerenciador.obterTarefas()).toHaveLength(1);
+    });
+
+    test("Deve lançar erro ao adicionar tarefa sem descrição", () => {
+        expect(() => gerenciador.adicionarTarefa("")).toThrow("Descrição é obrigatória");
+    });
+});
